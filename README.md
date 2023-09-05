@@ -13,7 +13,7 @@ This is of special importance in CPG companies to stay competitive and as the vo
 ![](https://github.com/aleivaar94/Customer-Review-Sentiment-Analysis-Streamlit/blob/master/assets/demo-sentiment.gif)
 
 
-## Go To App [👆🏼](https://wwweminence-sentiment.streamlit.app)
+## Go To App [👆🏼](https://www.eminence-sentiment.streamlit.app)
 
 
 ## Requirements
