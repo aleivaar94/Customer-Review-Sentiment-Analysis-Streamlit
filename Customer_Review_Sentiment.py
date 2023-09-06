@@ -1,30 +1,30 @@
 import streamlit as st
-import torch
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from scipy.special import softmax
+# import torch
+# from transformers import AutoTokenizer, AutoModelForSequenceClassification
+# from scipy.special import softmax
 import pandas as pd
 import random
 
-MODEL = "cardiffnlp/twitter-roberta-base-sentiment"
-tokenizer = AutoTokenizer.from_pretrained(MODEL)
-model = AutoModelForSequenceClassification.from_pretrained(MODEL)
+# MODEL = "cardiffnlp/twitter-roberta-base-sentiment"
+# tokenizer = AutoTokenizer.from_pretrained(MODEL)
+# model = AutoModelForSequenceClassification.from_pretrained(MODEL)
 
-# Define function to apply to input example
-def polarity_scores_roberta(example):
-    encoded_text = tokenizer(example, return_tensors='pt')
-    output = model(**encoded_text)
-    scores = output[0][0].detach().numpy()
-    scores = softmax(scores)
-    scores_dict = {
-        'Negative': scores[0],
-        'Neutral': scores[1],
-        'Positive': scores[2]
-    }
+# # Define function to apply to input example
+# def polarity_scores_roberta(example):
+#     encoded_text = tokenizer(example, return_tensors='pt')
+#     output = model(**encoded_text)
+#     scores = output[0][0].detach().numpy()
+#     scores = softmax(scores)
+#     scores_dict = {
+#         'Negative': scores[0],
+#         'Neutral': scores[1],
+#         'Positive': scores[2]
+#     }
 
-    # Find the key with the highest score
-    highest_score_key = max(scores_dict, key=scores_dict.get)
+#     # Find the key with the highest score
+#     highest_score_key = max(scores_dict, key=scores_dict.get)
 
-    return highest_score_key
+#     return highest_score_key
 
 # Streamlit App
 
@@ -66,12 +66,16 @@ with st.container():
         st.write("Customer Survey Subset:")
         st.dataframe(filtered_df[['Text', 'Summary', 'ProfileName', 'UserId']])
 
+from transformers import pipeline
+
+sent_pipeline = pipeline("sentiment-analysis")
 
 with st.container():
     example = st.text_area("Enter a Customer Review")
     if st.button("2. Analyze"):
-        sentiment = polarity_scores_roberta(example)
-        st.write(f"Sentiment: {sentiment}")
+        result = sent_pipeline(example)
+        label = result[0]['label']
+        st.write(f"Sentiment: {label}")
 
 col1, col2, col3 = st.columns(3)
 col2.markdown('Made with ❤️ by [Alejandro](https://github.com/aleivaar94)')
